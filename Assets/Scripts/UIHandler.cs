@@ -1,28 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public InputField nameInputField;
+    public Button startButton;
+
     void Start()
     {
+        if (nameInputField == null)
+        {
+            Debug.LogError("Name InputField is not assigned in the Inspector.");
+            return;
+        }
 
+        if (startButton == null)
+        {
+            Debug.LogError("Start Button is not assigned in the Inspector.");
+            return;
+        }
+
+        startButton.onClick.AddListener(SaveNameAndStartGame);
     }
 
-    // Update is called once per frame
-    void Update()
+    void SaveNameAndStartGame()
     {
-        
-    }
+        if (nameInputField.text == "")
+        {
+            Debug.LogError("Name InputField is empty.");
+            return;
+        }
 
-    public void StartGame()
-    {
-        SceneManager.UnloadSceneAsync("start menu");
-        SceneManager.LoadScene("main");
+        string playerName = nameInputField.text;
+        PlayerPrefs.SetString("PlayerName", playerName);
+        PlayerPrefs.Save(); // Save the changes
+        SceneManager.LoadScene("main"); // Load the main game scene
     }
-
     public void QuitGame()
     {
         Application.Quit();
